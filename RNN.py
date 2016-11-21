@@ -967,7 +967,7 @@ def train_and_evaluate_model(recurrent_nodes, batches, epochs, dropout1=0.3, dro
 if __name__ == "__main__":
     run_start = time.clock()
 
-    train_and_evaluate_model(100, 1, 20, dropout1=0.3, dropout2=0.3, step_size=0.005, balance_model=True,
+    train_and_evaluate_model(50, 1, 20, dropout1=0.3, dropout2=0.3, step_size=0.005, balance_model=True,
                              scale_output=True, variant="GRU")
 
     print 'Total Runtime:', "{0:.1f}s".format(time.clock() - run_start)
