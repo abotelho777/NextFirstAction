@@ -26,30 +26,28 @@ class RNN:
             data = du.transpose(data)
 
             if one_hot_labels:
-                assert len(covariate_columns) == 1
+                assert len(label_columns) == 1
 
-                for j in range(0, len(label_columns[0])):
-                    try:
-                        data[label_columns[0]][j] = int(data[0][j])
-                    except ValueError:
-                        data[label_columns[0]][j] = data[label_columns[0]][j]  # do nothing
-
-                numerated = du.numerate(data[label_columns[0]])
-                one_hot = np.zeros([np.max(numerated), len(numerated)])
+                numerated = du.numerate(data[label_columns[0]], ignore=[''])
+                one_hot = np.zeros([int(np.nanmax(numerated)) + 1, len(numerated)])
 
                 for i in range(0, len(numerated)):
-                    one_hot[numerated[i]][i] = 1
+                    if np.isnan(numerated[i]):
+                        for j in range(0, len(one_hot)):
+                            one_hot[j][i] = float('nan')
+                    else:
+                        one_hot[numerated[i]][i] = 1
 
-                covariate_columns = []
+                        label_columns = []
                 cols = len(data)
                 for i in range(0, len(one_hot)):
-                    data.append(one_hot[i])
-                    covariate_columns.append(cols + i)
+                    data.append(one_hot[i].tolist())
+                    label_columns.append(cols + i)
 
             for i in range(0, len(covariate_columns)):
                 for j in range(0, len(data[i])):
                     data[covariate_columns[i]][j] = float(data[covariate_columns[i]][j])
-                    # data[covariate_columns[i]] = du.normalize(data[covariate_columns[i]],method="zscore")
+
             data = du.transpose(data)
             primary = du.unique(du.transpose(data)[primary_column])
 
@@ -108,10 +106,10 @@ class RNN:
         labels = []
         primary_group = []
 
-        data = du.convert_to_floats(data)
-
         # if data is not null, build the dataset
         if data is not None:
+            data = du.convert_to_floats(data)
+
             if one_hot_labels:
                 assert len(label_columns) == 1
                 data = du.transpose(data)
@@ -342,6 +340,8 @@ class RNN:
         self.dropout1 = 0.6
         self.dropout2 = 0.6
 
+        self.covariates = None
+
         self.min_preds = [1,1,1,1]
         self.min_preds = [0,0,0,0]
         self.avg_preds = [0.5,0.5,0.5,0.5]
@@ -476,9 +476,25 @@ class RNN:
         self.isBuilt = True
         print "Network Params:", count_params(self.l_output_RNN)
 
-    def train(self, training, training_labels):
+    def train(self, training, training_labels, covariates=None):
 
-        self.num_input = du.len_deepest(training)
+        if covariates is None:
+            self.num_input = du.len_deepest(training)
+        else:
+            assert type(covariates) is list
+            assert max(covariates) < du.len_deepest(training)
+            assert min(covariates) >= 0
+            self.covariates = du.unique(covariates)
+            self.num_input = len(self.covariates)
+            for a in range(0,len(training)):
+                if type(training[a]) is not list:
+                    training[a] = training[a].tolist()
+                for e in range(0,len(training[a])):
+                    c = []
+                    for i in range(0,len(self.covariates)):
+                        c.append(training[a][e][self.covariates[i]])
+                    training[a][e] = c
+
         self.num_output = du.len_deepest(training_labels)
 
         if not self.isBuilt:
@@ -500,7 +516,7 @@ class RNN:
         for a in range(0,len(training)):
             sample = []
             for e in range(0,len(training[a])):
-                covariates = []
+                covar = []
                 for i in range(0,len(training[a][e])):
                     cov = 0
                     if self.cov_stdev[i] == 0:
@@ -511,8 +527,8 @@ class RNN:
                     if math.isnan(cov) or math.isinf(cov):
                         cov = 0
 
-                    covariates.append(cov)
-                sample.append(covariates)
+                    covar.append(cov)
+                sample.append(covar)
             training_samples.append(sample)
 
         label_train = training_labels
@@ -592,12 +608,10 @@ class RNN:
                 "   {0:.4f}".format(eval / n_test), \
                 "   {0:.1f}s".format(time.clock() - epoch_time)
 
-            # if e == 0:
-            #     previous = eval/n_test
-            # else:
-            #     if eval/n_test - previous > 0.005:
-            #         break
-            #     previous = eval/n_test
+            if not e == 0 and eval/n_test - previous > 0.005:
+                print "evaluation difference > 0.005, stopping..."
+                break
+            previous = eval/n_test
             if math.isnan(epoch / n_train):
                 print "NaN Value found: Rebuilding Network..."
                 self.isBuilt = False
@@ -620,6 +634,15 @@ class RNN:
             self.train_validation_RNN[1].append(str(RNN_val_err[i]))
 
     def predict(self, test):
+        if self.covariates is not None:
+            for a in range(0, len(test)):
+                if type(test[a]) is not list:
+                    test[a] = test[a].tolist()
+                for e in range(0, len(test[a])):
+                    c = []
+                    for i in range(0, len(self.covariates)):
+                        c.append(test[a][e][self.covariates[i]])
+                        test[a][e] = c
 
         if len(self.cov_mean) == 0 or len(self.cov_stdev) == 0:
             print "Scaling factors have not been generated: calculating using test sample"
@@ -679,6 +702,16 @@ class RNN:
     def test(self, test, test_labels=None, label_names=None):
         if test_labels is None:
             return self.predict(test)
+
+        if self.covariates is not None:
+            for a in range(0, len(test)):
+                if type(test[a]) is not list:
+                    test[a] = test[a].tolist()
+                for e in range(0, len(test[a])):
+                    c = []
+                    for i in range(0, len(self.covariates)):
+                        c.append(test[a][e][self.covariates[i]])
+                        test[a][e] = c
 
         if len(self.cov_mean) == 0 or len(self.cov_stdev) == 0:
             print "Scaling factors have not been generated: calculating using test sample"
@@ -859,22 +892,87 @@ class RNN:
 
 #################################################################################################
 
+def load_data(filename):
 
-def train_and_evaluate_model(recurrent_nodes, batches, epochs, dropout1=0.3, dropout2=0.3, step_size=0.01,
-                             balance_model=False, scale_output=True, variant="GRU", folds=5):
+    data, labels, student = RNN.load_data(filename, 1, 2, [4, 5, 6, 7, 8, 9, 10], [6], use_next_timestep_label=True,
+                                          one_hot_labels=True, load_from_file=True)
+    return data, labels, student
+
+
+def hold_out_data(data, labels, student):
+    from sklearn.cross_validation import StratifiedKFold as stratk
+
+    data = data.tolist()
+    labels = labels.tolist()
+    student = student.tolist()
+
+    # stratify by sample
+    sample_hints = []
+    for s in range(0, len(data)):
+        count = 0
+        for d in range(0, len(labels[s])):
+            count += labels[s][d][1]
+        sample_hints.append(count)
+
+    s_hint_med = np.median(sample_hints)
+
+    smp_strata = [int(s > s_hint_med) for s in sample_hints]
+    skf_smp = stratk(smp_strata, n_folds=100, shuffle=True)
+
+    holdout = []
+    holdout_label = []
+    holdout_student = []
+    for ktrain, ktest in skf_smp:
+        for t in ktest:
+            holdout.append(data[t])
+            holdout_label.append(labels[t])
+            holdout_student.append(student[t])
+
+        ktest = np.array(ktest)
+        ktest.sort()
+
+        for t in range(len(ktest),0,-1):
+            del data[ktest[t-1]]
+            del labels[ktest[t-1]]
+            del student[ktest[t-1]]
+        break
+
+
+    return data, labels, student, holdout, holdout_label, holdout_student
+
+
+def select_features(data, labels, student):
+
+    auc = []
+
+    covariates = du.getPermutations(range(0,du.len_deepest(data)))
+
+    for i in covariates:
+        res = train_and_evaluate_model(list(data), list(labels), list(student), 50, 1, 20, dropout1=0.3, dropout2=0.3, step_size=0.005,
+                                       balance_model=True, scale_output=True, variant="GRU", covariates=i)
+        auc.append(res[1])
+
+    print "index:",auc.index(np.max(auc))
+    print "AUC:",np.max(auc)
+
+    return covariates
+
+
+def train_and_evaluate_model(data, labels, student, recurrent_nodes, batches, epochs, dropout1=0.3, dropout2=0.3,
+        step_size=0.01, balance_model=False, scale_output=True, variant="GRU", folds=5, covariates = None):
+
+    np.random.seed(1)
+
     confidence_table = []
     uid = 1
-
-    filename = "Dataset/Dataset.csv"
-
-    data, labels, student = RNN.load_data(filename, 1, 2, range(4, 11), [6], use_next_timestep_label=True,
-                                          one_hot_labels=True, load_from_file=False)
 
     RNN.print_label_distribution(labels, ["Attempt", "Hint"])
     eval_metrics = []
     unique_st = du.shuffle(du.unique(student))
     st_fold = folds
 
+    from sklearn.cross_validation import StratifiedKFold as stratk
+    # stratify by student
     fold = []
     fsamp = []
     for f in range(0, st_fold):
@@ -882,24 +980,21 @@ def train_and_evaluate_model(recurrent_nodes, batches, epochs, dropout1=0.3, dro
         fsamp.append(0)
 
     student_hints = []
-    for f in range(0,len(unique_st)):
+    for f in range(0, len(unique_st)):
         count = 0
         for s in range(0, len(student)):
             if student[s] == unique_st[f]:
-                for d in range(0,len(labels[s])):
+                for d in range(0, len(labels[s])):
                     count += labels[s][d][1]
-        student_hints.append([unique_st[f],count])
+        student_hints.append([unique_st[f], count])
 
-    du.writetoCSV(student_hints,'student_hints',['student','num_hints'])
+    du.writetoCSV(student_hints, 'student_hints', ['student', 'num_hints'])
 
     t_st_hints = du.transpose(student_hints)
     hint_med = np.median(t_st_hints[1])
 
     strata = [int(s > hint_med) for s in t_st_hints[1]]
-
-
-    from sklearn.cross_validation import StratifiedKFold as stratk
-    skf = stratk(strata, n_folds=st_fold,shuffle=True)
+    skf = stratk(strata, n_folds=st_fold, shuffle=True)
 
     f = 0
     u = []
@@ -942,7 +1037,7 @@ def train_and_evaluate_model(recurrent_nodes, batches, epochs, dropout1=0.3, dro
 
         RNN.print_label_distribution(label_train, ["Attempt", "Hint"])
         GNET.set_training_params(batches, epochs, balance=balance_model, scale_output=scale_output)
-        GNET.train(training, label_train)
+        GNET.train(training, label_train, covariates=covariates)
 
         pred = GNET.test(test, label_test, ["Attempt", "Hint"])
         label_name = ["Attempt", "Hint"]
@@ -959,16 +1054,22 @@ def train_and_evaluate_model(recurrent_nodes, batches, epochs, dropout1=0.3, dro
     for m in eval_metrics:
         print m
 
-    print '=============================================='
-    print np.mean(eval_metrics, axis=0).tolist()
-    du.writetoCSV(confidence_table, 'label_confidence', ['Unique ID', 'Human Label', 'Confused', 'Concentrating',
-                                                         'Bored', 'Frustrated'])
+    return np.average(eval_metrics, axis=0)
 
 if __name__ == "__main__":
     run_start = time.clock()
 
-    train_and_evaluate_model(50, 1, 20, dropout1=0.3, dropout2=0.3, step_size=0.005, balance_model=True,
-                             scale_output=True, variant="GRU")
+    np.random.seed(0)
+
+    filename = "Dataset/Dataset.csv"
+    data, labels, student = load_data(filename)
+
+    data, labels, student, holdout, holdout_label, holdout_student = hold_out_data(data, labels, student)
+
+    features = select_features(holdout, holdout_label, holdout_student)
+
+    # train_and_evaluate_model(data,labels,student,50, 1, 20, dropout1=0.3, dropout2=0.3, step_size=0.005,
+    #                          balance_model=True,scale_output=True, variant="GRU", covariates=features)
 
     print 'Total Runtime:', "{0:.1f}s".format(time.clock() - run_start)
 

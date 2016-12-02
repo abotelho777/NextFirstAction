@@ -137,6 +137,38 @@ def readHeadersCSV(filename):
     return []
 
 
+def factorial(x):
+    print x
+    val = x
+    for i in range(1,x-1):
+        print x-i
+        val *= x-i
+    return val
+
+
+def getPermutations(ar):
+
+    def perm(ar, ind):
+        if ind == 1:
+            return [[i] for i in ar]
+        t = perm(ar,ind-1)
+        p = list(t)
+        tprime = []
+        for i in range(0,len(t)):
+            if len(t[i]) == ind-1:
+                    tprime.append(t[i])
+        for i in range(0,len(ar)-(ind-1)):
+            head = tprime[i]
+            for j in range(i+(ind-1),len(ar)):
+                c = list(head)
+                c.append(ar[j])
+                p.append(c)
+        return p
+
+    return perm(ar,len(ar))
+
+getPermutations([0,1,2])
+
 def convert_to_floats(ar):
     data = []
     for i in range(0, len(ar)):
