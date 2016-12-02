@@ -619,7 +619,7 @@ class RNN:
 
         tmp_scaling = self.scale_output
         self.scale_output = False
-        pred = self.predict(training)
+        pred = self.predict(list(training))
         self.scale_output = tmp_scaling
 
         self.max_preds = np.max(pred,axis=0)
@@ -634,15 +634,16 @@ class RNN:
             self.train_validation_RNN[1].append(str(RNN_val_err[i]))
 
     def predict(self, test):
-        if self.covariates is not None:
-            for a in range(0, len(test)):
-                if type(test[a]) is not list:
-                    test[a] = test[a].tolist()
-                for e in range(0, len(test[a])):
-                    c = []
-                    for i in range(0, len(self.covariates)):
-                        c.append(test[a][e][self.covariates[i]])
-                        test[a][e] = c
+        if not du.len_deepest(test) == self.num_input:
+            if self.covariates is not None:
+                for a in range(0, len(test)):
+                    if type(test[a]) is not list:
+                        test[a] = test[a].tolist()
+                    for e in range(0, len(test[a])):
+                        c = []
+                        for i in range(0, len(self.covariates)):
+                            c.append(test[a][e][self.covariates[i]])
+                            test[a][e] = c
 
         if len(self.cov_mean) == 0 or len(self.cov_stdev) == 0:
             print "Scaling factors have not been generated: calculating using test sample"
@@ -703,15 +704,16 @@ class RNN:
         if test_labels is None:
             return self.predict(test)
 
-        if self.covariates is not None:
-            for a in range(0, len(test)):
-                if type(test[a]) is not list:
-                    test[a] = test[a].tolist()
-                for e in range(0, len(test[a])):
-                    c = []
-                    for i in range(0, len(self.covariates)):
-                        c.append(test[a][e][self.covariates[i]])
-                        test[a][e] = c
+        if not du.len_deepest(test) == self.num_input:
+            if self.covariates is not None:
+                for a in range(0, len(test)):
+                    if type(test[a]) is not list:
+                        test[a] = test[a].tolist()
+                    for e in range(0, len(test[a])):
+                        c = []
+                        for i in range(0, len(self.covariates)):
+                            c.append(test[a][e][self.covariates[i]])
+                            test[a][e] = c
 
         if len(self.cov_mean) == 0 or len(self.cov_stdev) == 0:
             print "Scaling factors have not been generated: calculating using test sample"
@@ -952,6 +954,10 @@ def select_features(data, labels, student):
                                        balance_model=True, scale_output=True, variant="GRU", covariates=i)
         auc.append(res[1])
 
+    perf = du.transpose(covariates)
+    perf.append(du.transpose(auc))
+    du.writetoCSV(du.transpose(perf),'feature_selection',['covariate_indices','AUC'])
+
     print "index:",auc.index(np.max(auc))
     print "AUC:",np.max(auc)
 
@@ -1037,9 +1043,9 @@ def train_and_evaluate_model(data, labels, student, recurrent_nodes, batches, ep
 
         RNN.print_label_distribution(label_train, ["Attempt", "Hint"])
         GNET.set_training_params(batches, epochs, balance=balance_model, scale_output=scale_output)
-        GNET.train(training, label_train, covariates=covariates)
+        GNET.train(list(training), list(label_train), covariates=list(covariates))
 
-        pred = GNET.test(test, label_test, ["Attempt", "Hint"])
+        pred = GNET.test(list(test), list(label_test), ["Attempt", "Hint"])
         label_name = ["Attempt", "Hint"]
         lab = RNN.flatten_sequence(label_test)
         for k in range(0, len(pred)):

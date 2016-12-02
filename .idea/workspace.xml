@@ -2,15 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="131c8ac5-b602-41ff-9ef6-8b606bfdbfda" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/timeseries_data.npy" afterPath="$PROJECT_DIR$/timeseries_data.npy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/timeseries_groups.npy" afterPath="$PROJECT_DIR$/timeseries_groups.npy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/timeseries_labels.npy" afterPath="$PROJECT_DIR$/timeseries_labels.npy" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DataUtility.py" afterPath="$PROJECT_DIR$/DataUtility.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/RNN.py" afterPath="$PROJECT_DIR$/RNN.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/folds.csv" afterPath="$PROJECT_DIR$/folds.csv" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/label_confidence.csv" afterPath="$PROJECT_DIR$/label_confidence.csv" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/student_hints.csv" afterPath="$PROJECT_DIR$/student_hints.csv" />
     </list>
     <ignored path="NPDropout.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -26,7 +20,7 @@
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/NPDropout$ConvolutionalNets.coverage" NAME="ConvolutionalNets Coverage Results" MODIFIED="1461044222229" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/NPStopout$Nosetests_in_RNN.coverage" NAME="Nosetests in RNN Coverage Results" MODIFIED="1476320275509" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/NextFirstAction$RNN.coverage" NAME="RNN Coverage Results" MODIFIED="1480654473919" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/NextFirstAction$RNN.coverage" NAME="RNN Coverage Results" MODIFIED="1480698240353" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/NPStopout$DataUtility.coverage" NAME="DataUtility Coverage Results" MODIFIED="1470426288638" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/NPStopout$NPStopout.coverage" NAME="NPStopout Coverage Results" MODIFIED="1463422255482" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/NPStopout$RNN.coverage" NAME="RNN Coverage Results" MODIFIED="1479753751861" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
@@ -43,8 +37,8 @@
       <file leaf-file-name="RNN.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/RNN.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="209">
-              <caret line="919" column="42" selection-start-line="919" selection-start-column="42" selection-end-line="919" selection-end-column="42" />
+            <state relative-caret-position="-3176">
+              <caret line="712" column="30" selection-start-line="712" selection-start-column="30" selection-end-line="712" selection-end-column="30" />
               <folding>
                 <element signature="e#642#3700#0" expanded="false" />
                 <element signature="e#8041#8834#0" expanded="false" />
@@ -59,7 +53,7 @@
                 <element signature="e#14983#15175#0" expanded="false" />
                 <element signature="e#15232#15463#0" expanded="false" />
                 <element signature="e#15502#19842#0" expanded="false" />
-                <element signature="e#36005#36029#0" expanded="false" />
+                <element signature="e#36193#36217#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -107,10 +101,10 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="1913" />
-    <option name="y" value="96" />
-    <option name="width" value="1929" />
-    <option name="height" value="1047" />
+    <option name="x" value="-6" />
+    <option name="y" value="1" />
+    <option name="width" value="1692" />
+    <option name="height" value="1015" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -520,6 +514,14 @@
       <option name="presentableId" value="Default" />
       <updated>1460736621925</updated>
     </task>
+    <task id="LOCAL-00001" summary="+ functionality to holdout samples&#10;+ feature selection based on all covariate permutations&#10;+ ability to select a subset of features to use in a model (the dataset needs to be processed  just once with all covariate files selected and then it can be loaded from file - file is included as well)&#10;">
+      <created>1480654726045</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1480654726045</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -528,16 +530,16 @@
     </history-entry>
   </component>
   <component name="ToolWindowManager">
-    <frame x="1913" y="96" width="1929" height="1047" extended-state="0" />
+    <frame x="-6" y="1" width="1692" height="1015" extended-state="0" />
     <editor active="false" />
     <layout>
-      <window_info id="Project" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.35493988" sideWeight="0.42691752" order="4" side_tool="true" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.40513125" sideWeight="0.42640364" order="4" side_tool="true" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26254" sideWeight="0.5598536" order="6" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2718232" sideWeight="0.55966586" order="6" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26254" sideWeight="0.44014636" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2718232" sideWeight="0.44033414" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.35493988" sideWeight="0.5730825" order="5" side_tool="false" content_ui="tabs" x="317" y="625" width="963" height="313" />
+      <window_info id="Run" active="true" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.40513125" sideWeight="0.57359636" order="5" side_tool="false" content_ui="tabs" x="317" y="625" width="963" height="313" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
@@ -561,6 +563,10 @@
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="+ functionality to holdout samples&#10;+ feature selection based on all covariate permutations&#10;+ ability to select a subset of features to use in a model (the dataset needs to be processed  just once with all covariate files selected and then it can be loaded from file - file is included as well)&#10;" />
+    <option name="LAST_COMMIT_MESSAGE" value="+ functionality to holdout samples&#10;+ feature selection based on all covariate permutations&#10;+ ability to select a subset of features to use in a model (the dataset needs to be processed  just once with all covariate files selected and then it can be loaded from file - file is included as well)&#10;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -590,7 +596,7 @@
             <element signature="e#14983#15175#0" expanded="false" />
             <element signature="e#15232#15463#0" expanded="false" />
             <element signature="e#15502#19842#0" expanded="false" />
-            <element signature="e#36005#36029#0" expanded="false" />
+            <element signature="e#36193#36217#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -628,7 +634,7 @@
             <element signature="e#14983#15175#0" expanded="false" />
             <element signature="e#15232#15463#0" expanded="false" />
             <element signature="e#15502#19842#0" expanded="false" />
-            <element signature="e#36005#36029#0" expanded="false" />
+            <element signature="e#36193#36217#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -666,7 +672,7 @@
             <element signature="e#14983#15175#0" expanded="false" />
             <element signature="e#15232#15463#0" expanded="false" />
             <element signature="e#15502#19842#0" expanded="false" />
-            <element signature="e#36005#36029#0" expanded="false" />
+            <element signature="e#36193#36217#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -697,7 +703,7 @@
             <element signature="e#14983#15175#0" expanded="false" />
             <element signature="e#15232#15463#0" expanded="false" />
             <element signature="e#15502#19842#0" expanded="false" />
-            <element signature="e#36005#36029#0" expanded="false" />
+            <element signature="e#36193#36217#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -728,7 +734,7 @@
             <element signature="e#14983#15175#0" expanded="false" />
             <element signature="e#15232#15463#0" expanded="false" />
             <element signature="e#15502#19842#0" expanded="false" />
-            <element signature="e#36005#36029#0" expanded="false" />
+            <element signature="e#36193#36217#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -759,7 +765,7 @@
             <element signature="e#14983#15175#0" expanded="false" />
             <element signature="e#15232#15463#0" expanded="false" />
             <element signature="e#15502#19842#0" expanded="false" />
-            <element signature="e#36005#36029#0" expanded="false" />
+            <element signature="e#36193#36217#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -790,7 +796,7 @@
             <element signature="e#14983#15175#0" expanded="false" />
             <element signature="e#15232#15463#0" expanded="false" />
             <element signature="e#15502#19842#0" expanded="false" />
-            <element signature="e#36005#36029#0" expanded="false" />
+            <element signature="e#36193#36217#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -821,7 +827,7 @@
             <element signature="e#14983#15175#0" expanded="false" />
             <element signature="e#15232#15463#0" expanded="false" />
             <element signature="e#15502#19842#0" expanded="false" />
-            <element signature="e#36005#36029#0" expanded="false" />
+            <element signature="e#36193#36217#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -852,7 +858,7 @@
             <element signature="e#14983#15175#0" expanded="false" />
             <element signature="e#15232#15463#0" expanded="false" />
             <element signature="e#15502#19842#0" expanded="false" />
-            <element signature="e#36005#36029#0" expanded="false" />
+            <element signature="e#36193#36217#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -883,7 +889,7 @@
             <element signature="e#14983#15175#0" expanded="false" />
             <element signature="e#15232#15463#0" expanded="false" />
             <element signature="e#15502#19842#0" expanded="false" />
-            <element signature="e#36005#36029#0" expanded="false" />
+            <element signature="e#36193#36217#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -914,7 +920,7 @@
             <element signature="e#14983#15175#0" expanded="false" />
             <element signature="e#15232#15463#0" expanded="false" />
             <element signature="e#15502#19842#0" expanded="false" />
-            <element signature="e#36005#36029#0" expanded="false" />
+            <element signature="e#36193#36217#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -945,7 +951,7 @@
             <element signature="e#14983#15175#0" expanded="false" />
             <element signature="e#15232#15463#0" expanded="false" />
             <element signature="e#15502#19842#0" expanded="false" />
-            <element signature="e#36005#36029#0" expanded="false" />
+            <element signature="e#36193#36217#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1005,7 +1011,7 @@
             <element signature="e#14983#15175#0" expanded="false" />
             <element signature="e#15232#15463#0" expanded="false" />
             <element signature="e#15502#19842#0" expanded="false" />
-            <element signature="e#36005#36029#0" expanded="false" />
+            <element signature="e#36193#36217#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1036,7 +1042,7 @@
             <element signature="e#14983#15175#0" expanded="false" />
             <element signature="e#15232#15463#0" expanded="false" />
             <element signature="e#15502#19842#0" expanded="false" />
-            <element signature="e#36005#36029#0" expanded="false" />
+            <element signature="e#36193#36217#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1067,7 +1073,7 @@
             <element signature="e#14983#15175#0" expanded="false" />
             <element signature="e#15232#15463#0" expanded="false" />
             <element signature="e#15502#19842#0" expanded="false" />
-            <element signature="e#36005#36029#0" expanded="false" />
+            <element signature="e#36193#36217#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1098,7 +1104,7 @@
             <element signature="e#14983#15175#0" expanded="false" />
             <element signature="e#15232#15463#0" expanded="false" />
             <element signature="e#15502#19842#0" expanded="false" />
-            <element signature="e#36005#36029#0" expanded="false" />
+            <element signature="e#36193#36217#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1129,7 +1135,7 @@
             <element signature="e#14983#15175#0" expanded="false" />
             <element signature="e#15232#15463#0" expanded="false" />
             <element signature="e#15502#19842#0" expanded="false" />
-            <element signature="e#36005#36029#0" expanded="false" />
+            <element signature="e#36193#36217#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1204,7 +1210,7 @@
             <element signature="e#14983#15175#0" expanded="false" />
             <element signature="e#15232#15463#0" expanded="false" />
             <element signature="e#15502#19842#0" expanded="false" />
-            <element signature="e#36005#36029#0" expanded="false" />
+            <element signature="e#36193#36217#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1234,8 +1240,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/RNN.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="209">
-          <caret line="919" column="42" selection-start-line="919" selection-start-column="42" selection-end-line="919" selection-end-column="42" />
+        <state relative-caret-position="-3176">
+          <caret line="712" column="30" selection-start-line="712" selection-start-column="30" selection-end-line="712" selection-end-column="30" />
           <folding>
             <element signature="e#642#3700#0" expanded="false" />
             <element signature="e#8041#8834#0" expanded="false" />
@@ -1250,7 +1256,7 @@
             <element signature="e#14983#15175#0" expanded="false" />
             <element signature="e#15232#15463#0" expanded="false" />
             <element signature="e#15502#19842#0" expanded="false" />
-            <element signature="e#36005#36029#0" expanded="false" />
+            <element signature="e#36193#36217#0" expanded="false" />
           </folding>
         </state>
       </provider>
