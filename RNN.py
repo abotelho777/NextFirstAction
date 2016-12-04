@@ -242,6 +242,10 @@ class RNN:
         else:
             print 'Skipping dataset loading - using cached data instead'
 
+            headers = du.readHeadersCSV(filename)
+            for i in range(0, len(headers)):
+                print '{:>2}:  {:<18}'.format(str(i), headers[i])
+
         print '\ntransforming data to time series...'
         if use_next_timestep_label:
             pdata, labels, grouping = RNN.build_sequences_with_next_problem_label(data, primary_column,
@@ -477,30 +481,30 @@ class RNN:
         print "Network Params:", count_params(self.l_output_RNN)
 
     def train(self, training, training_labels, covariates=None):
-
+        training_cpy = list(training)
         if covariates is None:
-            self.num_input = du.len_deepest(training)
+            self.num_input = du.len_deepest(training_cpy)
         else:
             assert type(covariates) is list
-            assert max(covariates) < du.len_deepest(training)
+            assert max(covariates) < du.len_deepest(training_cpy)
             assert min(covariates) >= 0
             self.covariates = du.unique(covariates)
             self.num_input = len(self.covariates)
-            for a in range(0,len(training)):
-                if type(training[a]) is not list:
-                    training[a] = training[a].tolist()
-                for e in range(0,len(training[a])):
+            for a in range(0,len(training_cpy)):
+                if type(training_cpy[a]) is not list:
+                    training_cpy[a] = training_cpy[a].tolist()
+                for e in range(0,len(training_cpy[a])):
                     c = []
                     for i in range(0,len(self.covariates)):
                         c.append(training[a][e][self.covariates[i]])
-                    training[a][e] = c
+                    training_cpy[a][e] = c
 
         self.num_output = du.len_deepest(training_labels)
 
         if not self.isBuilt:
             self.build_network()
 
-        t_tr = du.transpose(RNN.flatten_sequence(training))
+        t_tr = du.transpose(RNN.flatten_sequence(training_cpy))
         self.cov_mean = []
         self.cov_stdev = []
 
@@ -513,16 +517,16 @@ class RNN:
         training_samples = []
 
         import math
-        for a in range(0,len(training)):
+        for a in range(0,len(training_cpy)):
             sample = []
-            for e in range(0,len(training[a])):
+            for e in range(0,len(training_cpy[a])):
                 covar = []
-                for i in range(0,len(training[a][e])):
+                for i in range(0,len(training_cpy[a][e])):
                     cov = 0
                     if self.cov_stdev[i] == 0:
                         cov = 0
                     else:
-                        cov = (training[a][e][i]-self.cov_mean[i])/self.cov_stdev[i]
+                        cov = (training_cpy[a][e][i]-self.cov_mean[i])/self.cov_stdev[i]
 
                     if math.isnan(cov) or math.isinf(cov):
                         cov = 0
@@ -634,20 +638,21 @@ class RNN:
             self.train_validation_RNN[1].append(str(RNN_val_err[i]))
 
     def predict(self, test):
-        if not du.len_deepest(test) == self.num_input:
+        test_cpy = list(test)
+        if not du.len_deepest(test_cpy) == self.num_input:
             if self.covariates is not None:
-                for a in range(0, len(test)):
-                    if type(test[a]) is not list:
-                        test[a] = test[a].tolist()
+                for a in range(0, len(test_cpy)):
+                    if type(test_cpy[a]) is not list:
+                        test_cpy[a] = test_cpy[a].tolist()
                     for e in range(0, len(test[a])):
                         c = []
                         for i in range(0, len(self.covariates)):
-                            c.append(test[a][e][self.covariates[i]])
-                            test[a][e] = c
+                            c.append(test_cpy[a][e][self.covariates[i]])
+                        test_cpy[a][e] = c
 
         if len(self.cov_mean) == 0 or len(self.cov_stdev) == 0:
             print "Scaling factors have not been generated: calculating using test sample"
-            t_tr = du.transpose(RNN.flatten_sequence(test))
+            t_tr = du.transpose(RNN.flatten_sequence(test_cpy))
             self.cov_mean = []
             self.cov_stdev = []
 
@@ -660,16 +665,16 @@ class RNN:
         test_samples = []
 
         import math
-        for a in range(0, len(test)):
+        for a in range(0, len(test_cpy)):
             sample = []
-            for e in range(0, len(test[a])):
+            for e in range(0, len(test_cpy[a])):
                 covariates = []
-                for i in range(0, len(test[a][e])):
+                for i in range(0, len(test_cpy[a][e])):
                     cov = 0
                     if self.cov_stdev[i] == 0:
                         cov = 0
                     else:
-                        cov = (test[a][e][i] - self.cov_mean[i]) / self.cov_stdev[i]
+                        cov = (test_cpy[a][e][i] - self.cov_mean[i]) / self.cov_stdev[i]
 
                     if math.isnan(cov) or math.isinf(cov):
                         cov = 0
@@ -703,21 +708,21 @@ class RNN:
     def test(self, test, test_labels=None, label_names=None):
         if test_labels is None:
             return self.predict(test)
-
-        if not du.len_deepest(test) == self.num_input:
+        test_cpy = list(test)
+        if not du.len_deepest(test_cpy) == self.num_input:
             if self.covariates is not None:
-                for a in range(0, len(test)):
-                    if type(test[a]) is not list:
-                        test[a] = test[a].tolist()
-                    for e in range(0, len(test[a])):
+                for a in range(0, len(test_cpy)):
+                    if type(test_cpy[a]) is not list:
+                        test_cpy[a] = test_cpy[a].tolist()
+                    for e in range(0, len(test_cpy[a])):
                         c = []
                         for i in range(0, len(self.covariates)):
-                            c.append(test[a][e][self.covariates[i]])
-                            test[a][e] = c
+                            c.append(test_cpy[a][e][self.covariates[i]])
+                        test_cpy[a][e] = c
 
         if len(self.cov_mean) == 0 or len(self.cov_stdev) == 0:
             print "Scaling factors have not been generated: calculating using test sample"
-            t_tr = du.transpose(RNN.flatten_sequence(test))
+            t_tr = du.transpose(RNN.flatten_sequence(test_cpy))
             self.cov_mean = []
             self.cov_stdev = []
 
@@ -730,16 +735,16 @@ class RNN:
         test_samples = []
 
         import math
-        for a in range(0, len(test)):
+        for a in range(0, len(test_cpy)):
             sample = []
-            for e in range(0, len(test[a])):
+            for e in range(0, len(test_cpy[a])):
                 covariates = []
-                for i in range(0, len(test[a][e])):
+                for i in range(0, len(test_cpy[a][e])):
                     cov = 0
                     if self.cov_stdev[i] == 0:
                         cov = 0
                     else:
-                        cov = (test[a][e][i] - self.cov_mean[i]) / self.cov_stdev[i]
+                        cov = (test_cpy[a][e][i] - self.cov_mean[i]) / self.cov_stdev[i]
 
                     if math.isnan(cov) or math.isinf(cov):
                         cov = 0
@@ -949,19 +954,24 @@ def select_features(data, labels, student):
 
     covariates = du.getPermutations(range(0,du.len_deepest(data)))
 
+    prm = du.getPermutations(range(0,du.len_deepest(data)),True)
+    du.writetoCSV(prm,'permutation')
+
     for i in covariates:
         res = train_and_evaluate_model(list(data), list(labels), list(student), 50, 1, 20, dropout1=0.3, dropout2=0.3, step_size=0.005,
                                        balance_model=True, scale_output=True, variant="GRU", covariates=i)
         auc.append(res[1])
 
-    perf = du.transpose(covariates)
-    perf.append(du.transpose(auc))
-    du.writetoCSV(du.transpose(perf),'feature_selection',['covariate_indices','AUC'])
+    print "index:", auc.index(np.max(auc)), covariates[auc.index(np.max(auc))]
+    print "AUC:", np.max(auc)
 
-    print "index:",auc.index(np.max(auc))
-    print "AUC:",np.max(auc)
+    du.writetoCSV(auc,'feature_selection',['AUC'])
 
-    return covariates
+    auc_table = du.transpose([prm,auc])
+
+    du.writetoCSV(auc_table,'permutation_auc',['permutation','AUC'])
+
+    return covariates[auc.index(np.max(auc))]
 
 
 def train_and_evaluate_model(data, labels, student, recurrent_nodes, batches, epochs, dropout1=0.3, dropout2=0.3,

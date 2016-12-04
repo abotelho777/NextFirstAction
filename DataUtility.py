@@ -101,8 +101,8 @@ def loadCSV(filename, max_rows=None):
 
 def writetoCSV(ar,filename,headers=[]):
     # ar = np.array(transpose(ar))
-    ar = np.array(ar)
-    assert len(ar.shape) <= 2
+    np_ar = np.array(ar)
+    assert len(np_ar.shape) <= 2
 
     with open(filename + '.csv', 'w') as f:
         if len(headers)!=0:
@@ -110,12 +110,18 @@ def writetoCSV(ar,filename,headers=[]):
                 f.write(str(headers[i]) + ',')
             f.write(str(headers[len(headers)-1])+'\n')
         for i in range(0,len(ar)):
-            if (len(ar.shape) == 2):
+            if len(np_ar.shape) == 2:
                 for j in range(0,len(ar[i])-1):
-                    f.write(str(ar[i][j]) + ',')
+                    val = str(ar[i][j])
+                    if type(ar[i][j]) is str:
+                        val = '=\"' + val + '\"'
+                    f.write(val + ',')
                 f.write(str(ar[i][len(ar[i])-1]) + '\n')
             else:
-                f.write(str(ar[i]) + '\n')
+                val = str(ar[i])
+                if type(ar[i]) is str:
+                    val = '=\"' + val + '\"'
+                f.write(val + '\n')
     f.close()
 
 
@@ -146,7 +152,7 @@ def factorial(x):
     return val
 
 
-def getPermutations(ar):
+def getPermutations(ar, as_str=False):
 
     def perm(ar, ind):
         if ind == 1:
@@ -157,17 +163,26 @@ def getPermutations(ar):
         for i in range(0,len(t)):
             if len(t[i]) == ind-1:
                     tprime.append(t[i])
-        for i in range(0,len(ar)-(ind-1)):
+        for i in range(0,len(tprime)):
             head = tprime[i]
-            for j in range(i+(ind-1),len(ar)):
+            for j in range(ar.index(max(head))+1,len(ar)):
                 c = list(head)
                 c.append(ar[j])
                 p.append(c)
         return p
 
-    return perm(ar,len(ar))
+    ret = perm(ar,len(ar))
 
-getPermutations([0,1,2])
+    if not as_str:
+        return ret
+    else:
+        for i in range(0,len(ret)):
+            s = ''
+            for j in range(0,len(ret[i])):
+                s += str(ret[i][j])
+            ret[i] = s
+        return ret
+
 
 def convert_to_floats(ar):
     data = []
